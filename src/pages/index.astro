@@ -1,0 +1,199 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import HexCluster from '../components/HexCluster.astro';
+import { CONTACT_EMAIL } from '../config';
+
+const services = [
+	{
+		title: 'Fractional CIO',
+		body: 'Senior technology leadership on a part-time basis: strategy, budgets, vendor decisions and a roadmap your leadership team can act on.',
+		icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM16 8l-2.5 5.5L8 16l2.5-5.5Z',
+	},
+	{
+		title: 'Software Development',
+		body: 'Custom applications, integrations and internal tools, built to fit the way your business actually works.',
+		icon: 'M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16',
+	},
+	{
+		title: 'Technical Project Management',
+		body: 'Keep complex technology projects on scope, on schedule and accountable, from kickoff to cutover.',
+		icon: 'M9 3h6v4H9zM9 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-3M9 14l2 2 4-4',
+	},
+	{
+		title: 'Infrastructure Design and Implementation',
+		body: 'Networks, servers and endpoints designed for reliability, then installed, documented and handed over cleanly.',
+		icon: 'M4 4h16v6H4zM4 14h16v6H4zM8 7h.01M8 17h.01',
+	},
+	{
+		title: 'CyberSecurity',
+		body: 'Assess your risk, close the gaps and put practical controls in place to protect your people and your data.',
+		icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6ZM9 12l2 2 4-4',
+	},
+	{
+		title: 'Cloud Services',
+		body: 'Plan migrations, right-size spend and run cloud environments that are secure and easy to manage.',
+		icon: 'M7 18a5 5 0 0 1-.5-9.97A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9Z',
+	},
+	{
+		title: 'Telephony',
+		body: 'Modern business phone systems, from cloud PBX and call routing to contact center setup.',
+		icon: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z',
+	},
+	{
+		title: 'Extract-Transform-Load (ETL)',
+		body: 'Move and reshape data between systems so reports are accurate and teams stop retyping information.',
+		icon: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3ZM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
+	},
+	{
+		title: 'Internet of Things (IoT)',
+		body: 'Connect sensors and devices to the systems that need their data, with monitoring you can trust.',
+		icon: 'M7 7h10v10H7zM10 10h4v4h-4zM10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4',
+	},
+];
+
+const stages = [
+	{
+		title: 'Assess',
+		body: 'Learn how your business runs today and where technology is helping or getting in the way.',
+		items: ['Stakeholder interviews', 'Systems and security review', 'Risk and cost baseline'],
+	},
+	{
+		title: 'Plan',
+		body: 'Turn what we find into a prioritized roadmap with budgets, timelines and clear ownership.',
+		items: ['Technology roadmap', 'Budget and vendor plan', 'Measures of success'],
+	},
+	{
+		title: 'Build',
+		body: 'Deliver the work, whether it is new software, infrastructure or a migration, with steady oversight.',
+		items: ['Hands-on implementation', 'Project management', 'Testing and cutover'],
+	},
+	{
+		title: 'Support',
+		body: 'Stay on as your fractional technology leader to keep systems healthy and plans current.',
+		items: ['Ongoing advisory', 'Monitoring and reviews', 'Documentation and handoff'],
+	},
+];
+---
+
+<Base
+	title="Digital Honeycomb | Fractional CIO and technology services"
+	description="Digital Honeycomb provides fractional CIO leadership, software development, infrastructure, cybersecurity, cloud, telephony, ETL and IoT services."
+>
+	<SiteHeader />
+
+	<main>
+		<section class="hero">
+			<div class="container hero-grid">
+				<div>
+					<span class="eyebrow hero-eyebrow">Fractional CIO and technology services</span>
+					<h1>Senior technology leadership, without the full-time hire.</h1>
+					<p>
+						Digital Honeycomb brings strategy, engineering and infrastructure together, so every part of your
+						technology works as one system.
+					</p>
+					<div class="hero-actions">
+						<a class="btn btn-primary" href="#contact">Start a conversation</a>
+						<a class="btn btn-ghost" href="#services">Explore services</a>
+					</div>
+				</div>
+				<div class="hero-art">
+					<HexCluster />
+				</div>
+			</div>
+		</section>
+
+		<section class="section" id="services">
+			<div class="container">
+				<div class="section-head">
+					<span class="eyebrow">Services</span>
+					<h2>Every cell of your technology, covered</h2>
+					<p class="lead">
+						Bring us in for a single project or for ongoing leadership. Each service stands on its own and fits
+						with the rest.
+					</p>
+				</div>
+				<div class="cards">
+					{
+						services.map((s) => (
+							<div class="card">
+								<div class="card-icon" aria-hidden="true">
+									<svg
+										width="22"
+										height="22"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.8"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<path d={s.icon} />
+									</svg>
+								</div>
+								<h3>{s.title}</h3>
+								<p>{s.body}</p>
+							</div>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section class="section section-soft" id="how">
+			<div class="container">
+				<div class="section-head">
+					<span class="eyebrow">How we work</span>
+					<h2>From first look to long-term partner</h2>
+					<p class="lead">A clear, repeatable approach, whether we are fixing one problem or leading your technology.</p>
+				</div>
+				<ol class="stages" role="list">
+					{
+						stages.map((s, i) => (
+							<li class="stage">
+								<span class="stage-num">STEP {i + 1}</span>
+								<h3>{s.title}</h3>
+								<p>{s.body}</p>
+								<ul>
+									{s.items.map((item) => (
+										<li>{item}</li>
+									))}
+								</ul>
+							</li>
+						))
+					}
+				</ol>
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container">
+				<div class="banner">
+					<div class="banner-body">
+						<h2>Every cell connected.</h2>
+						<p>
+							Most technology problems live in the gaps between systems, vendors and teams. We design the pieces
+							to fit together, the way a honeycomb does: strong, efficient and built to grow.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section section-soft cta" id="contact">
+			<div class="container">
+				<span class="eyebrow">Get in touch</span>
+				<h2>Let's talk about your technology</h2>
+				<p class="lead">
+					Tell us what you're working on, whether it's a single project or ongoing leadership, and we'll set up a
+					time to talk.
+				</p>
+				<a class="btn btn-primary" href={`mailto:${CONTACT_EMAIL}`}>Email Digital Honeycomb</a>
+				<p class="cta-note">{CONTACT_EMAIL}</p>
+			</div>
+		</section>
+	</main>
+
+	<SiteFooter />
+</Base>

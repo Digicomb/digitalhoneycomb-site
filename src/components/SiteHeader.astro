@@ -1,0 +1,18 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.svg';
+---
+
+<header class="site-header">
+	<div class="container">
+		<a class="brand" href="/">
+			<Image src={logo} alt="" width={36} height={36} />
+			Digital Honeycomb
+		</a>
+		<nav class="nav" aria-label="Main">
+			<a href="/#services">Services</a>
+			<a href="/#how">How we work</a>
+			<a class="btn btn-primary" href="/#contact">Start a conversation</a>
+		</nav>
+	</div>
+</header>

@@ -1,0 +1,93 @@
+---
+// Decorative honeycomb of service cells for the hero. Pointy-top hexagons around a center cell.
+const r = 60;
+const hw = (Math.sqrt(3) / 2) * r;
+const d = 114; // center-to-center distance, leaves a small gap between cells
+const cx = 210;
+const cy = 200;
+
+const cells = [
+	{ label: 'Fractional CIO', dx: 0, dy: 0, kind: 'accent' },
+	{ label: 'Software', dx: d, dy: 0, kind: 'solid' },
+	{ label: 'Cloud', dx: d / 2, dy: -d * 0.866, kind: 'line' },
+	{ label: 'Security', dx: -d / 2, dy: -d * 0.866, kind: 'solid' },
+	{ label: 'Data / ETL', dx: -d, dy: 0, kind: 'line' },
+	{ label: 'Telephony', dx: -d / 2, dy: d * 0.866, kind: 'solid' },
+	{ label: 'IoT', dx: d / 2, dy: d * 0.866, kind: 'line' },
+];
+
+const hex = (x: number, y: number) =>
+	[
+		[x, y - r],
+		[x + hw, y - r / 2],
+		[x + hw, y + r / 2],
+		[x, y + r],
+		[x - hw, y + r / 2],
+		[x - hw, y - r / 2],
+	]
+		.map((p) => p.map((n) => n.toFixed(1)).join(' '))
+		.join(' ');
+---
+
+<svg class="hex-cluster" viewBox="40 30 340 340" aria-hidden="true">
+	<defs>
+		<linearGradient id="hc-o" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#ffa53d" />
+			<stop offset="1" stop-color="#ee7a0c" />
+		</linearGradient>
+	</defs>
+	{
+		cells.map((c) => {
+			const x = cx + c.dx;
+			const y = cy + c.dy;
+			return (
+				<g class={`cell cell-${c.kind}`}>
+					<polygon points={hex(x, y)} stroke-linejoin="round" />
+					<text x={x} y={y} dy="0.35em" text-anchor="middle">
+						{c.label}
+					</text>
+				</g>
+			);
+		})
+	}
+</svg>
+
+<style>
+	.hex-cluster {
+		width: 100%;
+		max-width: 420px;
+		height: auto;
+		overflow: visible;
+	}
+
+	polygon {
+		stroke-width: 2;
+	}
+
+	text {
+		font-family: inherit;
+		font-size: 15px;
+		font-weight: 600;
+		fill: #fff;
+	}
+
+	.cell-accent polygon {
+		fill: url(#hc-o);
+		stroke: #ffa53d;
+	}
+
+	.cell-accent text {
+		fill: #1c1f24;
+		font-weight: 700;
+	}
+
+	.cell-solid polygon {
+		fill: rgba(163, 168, 174, 0.28);
+		stroke: rgba(163, 168, 174, 0.45);
+	}
+
+	.cell-line polygon {
+		fill: rgba(255, 255, 255, 0.03);
+		stroke: rgba(255, 165, 61, 0.55);
+	}
+</style>
