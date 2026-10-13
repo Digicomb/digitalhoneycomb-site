@@ -1,4 +1,6 @@
 -- Contact requests from the digitalhoneycomb.com "Start a conversation" form.
+-- Lives in the shared Digicomb Supabase project (also used by missional.io), so names
+-- are prefixed with digicomb_ to stay separate from Missional's tables.
 -- Run once in the Supabase dashboard: SQL Editor -> New query -> paste -> Run.
 --
 -- Security model: the website uses the public (publishable/anon) key. Visitors can
@@ -9,7 +11,7 @@
 -- 1. Table
 -- ---------------------------------------------------------------------------
 
-create table if not exists public.contact_requests (
+create table if not exists public.digicomb_contact_requests (
 	id uuid primary key default gen_random_uuid(),
 	name text not null,
 	email text not null,
@@ -19,25 +21,25 @@ create table if not exists public.contact_requests (
 	source text,
 	created_at timestamptz not null default now(),
 
-	constraint contact_name_length check (char_length(name) between 1 and 120),
-	constraint contact_email_format check (email ~* '^[^@\s]+@[^@\s]+\.[^@\s]+$'),
-	constraint contact_email_length check (char_length(email) <= 254),
-	constraint contact_company_length check (char_length(company) <= 160),
-	constraint contact_interest_length check (char_length(interest) <= 80),
-	constraint contact_message_length check (char_length(message) between 1 and 4000),
-	constraint contact_source_length check (char_length(source) <= 60)
+	constraint digicomb_contact_name_length check (char_length(name) between 1 and 120),
+	constraint digicomb_contact_email_format check (email ~* '^[^@\s]+@[^@\s]+\.[^@\s]+$'),
+	constraint digicomb_contact_email_length check (char_length(email) <= 254),
+	constraint digicomb_contact_company_length check (char_length(company) <= 160),
+	constraint digicomb_contact_interest_length check (char_length(interest) <= 80),
+	constraint digicomb_contact_message_length check (char_length(message) between 1 and 4000),
+	constraint digicomb_contact_source_length check (char_length(source) <= 60)
 );
 
-alter table public.contact_requests enable row level security;
+alter table public.digicomb_contact_requests enable row level security;
 
 -- Only allow inserts from the website; no select/update/delete policies exist,
 -- so the public key cannot read requests back.
-revoke all on public.contact_requests from anon, authenticated;
-grant insert (name, email, company, interest, message, source) on public.contact_requests to anon, authenticated;
+revoke all on public.digicomb_contact_requests from anon, authenticated;
+grant insert (name, email, company, interest, message, source) on public.digicomb_contact_requests to anon, authenticated;
 
-drop policy if exists "Website visitors can send a contact request" on public.contact_requests;
+drop policy if exists "Website visitors can send a contact request" on public.digicomb_contact_requests;
 create policy "Website visitors can send a contact request"
-	on public.contact_requests
+	on public.digicomb_contact_requests
 	for insert
 	to anon, authenticated
 	with check (true);
@@ -48,16 +50,16 @@ create policy "Website visitors can send a contact request"
 
 create extension if not exists pg_net with schema extensions;
 
--- Settings are stored in Supabase Vault (encrypted). Set them ONCE by running the
--- block below with your real values filled in (replace the <...> placeholders).
+-- Settings are stored in Supabase Vault (encrypted). 'resend_api_key' is shared with
+-- Missional and already exists. Set the other two ONCE by running the block below with
+-- your real values filled in (replace the <...> placeholder).
 -- To change a value later: Project Settings -> Vault, or
---   select vault.update_secret((select id from vault.secrets where name = 'resend_api_key'), 're_new_key');
+--   select vault.update_secret((select id from vault.secrets where name = 'digicomb_contact_notify_to'), 'new@example.com');
 --
--- select vault.create_secret('<your Resend API key, starts with re_>', 'resend_api_key');
--- select vault.create_secret('<inbox that should receive requests>', 'contact_notify_to');
--- select vault.create_secret('Digital Honeycomb <notifications@digitalhoneycomb.com>', 'contact_notify_from');
+-- select vault.create_secret('<inbox that should receive requests>', 'digicomb_contact_notify_to');
+-- select vault.create_secret('Digital Honeycomb <notifications@digitalhoneycomb.com>', 'digicomb_contact_notify_from');
 
-create or replace function public.notify_contact_request()
+create or replace function public.notify_digicomb_contact_request()
 returns trigger
 language plpgsql
 security definer
@@ -70,8 +72,8 @@ declare
 	body_text text;
 begin
 	select decrypted_secret into api_key from vault.decrypted_secrets where name = 'resend_api_key';
-	select decrypted_secret into notify_to from vault.decrypted_secrets where name = 'contact_notify_to';
-	select decrypted_secret into notify_from from vault.decrypted_secrets where name = 'contact_notify_from';
+	select decrypted_secret into notify_to from vault.decrypted_secrets where name = 'digicomb_contact_notify_to';
+	select decrypted_secret into notify_from from vault.decrypted_secrets where name = 'digicomb_contact_notify_from';
 
 	-- Not configured yet: keep the request, skip the email.
 	if api_key is null or notify_to is null or notify_from is null then
@@ -113,28 +115,10 @@ begin
 end;
 $$;
 
-revoke all on function public.notify_contact_request() from public, anon, authenticated;
+revoke all on function public.notify_digicomb_contact_request() from public, anon, authenticated;
 
-drop trigger if exists contact_request_notify on public.contact_requests;
-create trigger contact_request_notify
-	after insert on public.contact_requests
+drop trigger if exists digicomb_contact_request_notify on public.digicomb_contact_requests;
+create trigger digicomb_contact_request_notify
+	after insert on public.digicomb_contact_requests
 	for each row
-	execute function public.notify_contact_request();
-
--- ---------------------------------------------------------------------------
--- 3. Keep-alive
--- ---------------------------------------------------------------------------
-
--- Returns the database time. Exposes no data; callable with the public key at
--- POST /rest/v1/rpc/keep_alive. Called by .github/workflows/supabase-keepalive.yml.
-create or replace function public.keep_alive()
-returns timestamptz
-language sql
-stable
-set search_path = ''
-as $$
-	select now();
-$$;
-
-revoke all on function public.keep_alive() from public;
-grant execute on function public.keep_alive() to anon, authenticated;
+	execute function public.notify_digicomb_contact_request();

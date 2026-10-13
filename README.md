@@ -16,8 +16,6 @@ Astro site for Digital Honeycomb, built on the same structure as missional.io.
 
 ## Contact form
 
-The "Start a conversation" form inserts into a Supabase `contact_requests` table (insert-only for the public key). A database trigger emails each request through Resend, with the visitor as reply-to.
+The "Start a conversation" form inserts into `digicomb_contact_requests` in the shared Digicomb Supabase project (also used by missional.io, which owns the keep-alive job). The public key can insert but not read. A database trigger emails each request through Resend, with the visitor as reply-to.
 
-1. Run `supabase/migrations/001_contact_requests.sql` in the Supabase SQL Editor.
-2. Create the three Vault secrets listed in that file (Resend API key, notify-to, notify-from).
-3. Put the project URL and publishable key in `src/config.ts` and `.github/workflows/supabase-keepalive.yml`.
+Setup: run `supabase/migrations/001_digicomb_contact_requests.sql` in the Supabase SQL Editor, then create the two Vault secrets listed in it.
