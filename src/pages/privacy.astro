@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const effectiveDate = 'October 13, 2026';
+---
+
+<Base
+	title="Privacy Policy | Digital Honeycomb"
+	description="How Digital Honeycomb collects, uses and protects information on digitalhoneycomb.com."
+>
+	<SiteHeader />
+
+	<main class="section">
+		<article class="container prose">
+			<span class="eyebrow">Legal</span>
+			<h1>Privacy Policy</h1>
+			<p class="prose-meta">Effective {effectiveDate}</p>
+
+			<p>
+				This policy explains what information Digital Honeycomb ("we," "us") collects when you visit
+				digitalhoneycomb.com, how we use it, and the choices you have.
+			</p>
+
+			<h2>Information we collect</h2>
+			<h3>Information you give us</h3>
+			<p>
+				When you send us a message through the contact form, we collect your name, email address and message,
+				and, if you choose to provide them, your company and the service you're interested in.
+			</p>
+			<h3>Information collected automatically</h3>
+			<p>
+				This site does not use analytics or advertising cookies. Our hosting provider may record standard server
+				logs, including IP addresses, for security and reliability.
+			</p>
+
+			<h2>How we use information</h2>
+			<ul>
+				<li>To reply to your message and discuss the services you asked about.</li>
+				<li>To keep the site secure and prevent abuse.</li>
+			</ul>
+			<p>We do not sell your personal information, and we do not use it for third-party advertising.</p>
+
+			<h2>Service providers</h2>
+			<p>We rely on a small number of providers to run this site. They process information on our behalf:</p>
+			<ul>
+				<li><strong>GitHub Pages</strong>: website hosting.</li>
+				<li><strong>Supabase</strong>: secure storage of contact form messages.</li>
+				<li><strong>Resend</strong>: delivery of internal notification emails about new messages.</li>
+			</ul>
+			<p>
+				We may also disclose information if required by law, or to protect the rights, safety and security of
+				Digital Honeycomb, our clients or others.
+			</p>
+
+			<h2>How long we keep it</h2>
+			<p>
+				We keep contact form messages for as long as we need them to respond to you and to maintain a record of
+				our conversation, or until you ask us to remove them.
+			</p>
+
+			<h2>Your choices</h2>
+			<p>
+				To see, update or delete the information you've sent us, <a href="/#contact">send us a message</a> and
+				we'll take care of it. Depending on where you live, you may have additional rights to access, correct or
+				delete your personal information, and we'll respond to any such request.
+			</p>
+
+			<h2>Security</h2>
+			<p>
+				We use reasonable safeguards to protect your information. Messages can be sent from the website but
+				cannot be read back through it. No method of transmission or storage is completely secure, however.
+			</p>
+
+			<h2>Children</h2>
+			<p>This site is intended for businesses. We do not knowingly collect personal information from children under 13.</p>
+
+			<h2>Changes to this policy</h2>
+			<p>If we update this policy, we'll post the new version here and change the effective date above.</p>
+		</article>
+	</main>
+
+	<SiteFooter />
+</Base>

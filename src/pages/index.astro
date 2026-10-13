@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import HexCluster from '../components/HexCluster.astro';
-import { CONTACT_EMAIL } from '../config';
+import ContactForm from '../components/ContactForm.astro';
 
 const services = [
 	{
@@ -186,11 +186,10 @@ const stages = [
 				<span class="eyebrow">Get in touch</span>
 				<h2>Let's talk about your technology</h2>
 				<p class="lead">
-					Tell us what you're working on, whether it's a single project or ongoing leadership, and we'll set up a
-					time to talk.
+					Tell us what you're working on, whether it's a single project or ongoing leadership, and we'll get back
+					to you to set up a time to talk.
 				</p>
-				<a class="btn btn-primary" href={`mailto:${CONTACT_EMAIL}`}>Email Digital Honeycomb</a>
-				<p class="cta-note">{CONTACT_EMAIL}</p>
+				<ContactForm />
 			</div>
 		</section>
 	</main>

@@ -1,4 +1,4 @@
-// Public, browser-safe settings.
-
-// digitalhoneycomb.com has no MX records yet, so this mailbox can't receive mail until email is set up.
-export const CONTACT_EMAIL = 'hello@digitalhoneycomb.com';
+// Public, browser-safe settings. Never put a Supabase secret or service_role key here.
+// Also copied into .github/workflows/supabase-keepalive.yml.
+export const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co';
+export const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_REPLACE_ME';

@@ -1,0 +1,127 @@
+---
+const interests = [
+	'Fractional CIO',
+	'Software Development',
+	'Technical Project Management',
+	'Infrastructure',
+	'CyberSecurity',
+	'Cloud Services',
+	'Telephony',
+	'ETL / Data',
+	'IoT',
+	'Not sure yet',
+];
+---
+
+<form class="contact-form" id="contact-form" novalidate>
+	<div class="field-row">
+		<div class="field">
+			<label for="cf-name">Name <span aria-hidden="true">*</span></label>
+			<input id="cf-name" name="name" type="text" autocomplete="name" maxlength="120" required />
+		</div>
+		<div class="field">
+			<label for="cf-email">Email <span aria-hidden="true">*</span></label>
+			<input id="cf-email" name="email" type="email" autocomplete="email" maxlength="254" required />
+		</div>
+	</div>
+	<div class="field-row">
+		<div class="field">
+			<label for="cf-company">Company</label>
+			<input id="cf-company" name="company" type="text" autocomplete="organization" maxlength="160" />
+		</div>
+		<div class="field">
+			<label for="cf-interest">I'm interested in</label>
+			<select id="cf-interest" name="interest">
+				<option value="">Choose one</option>
+				{interests.map((i) => <option value={i}>{i}</option>)}
+			</select>
+		</div>
+	</div>
+	<div class="field">
+		<label for="cf-message">How can we help? <span aria-hidden="true">*</span></label>
+		<textarea id="cf-message" name="message" rows="5" maxlength="4000" required></textarea>
+	</div>
+
+	<!-- Spam trap: hidden from people, often filled in by bots. -->
+	<div class="hp" aria-hidden="true">
+		<label for="cf-website">Website</label>
+		<input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+	</div>
+
+	<button class="btn btn-primary" type="submit">Start a conversation</button>
+	<p class="form-consent">
+		We'll only use your information to reply to you. See our <a href="/privacy/">privacy policy</a>.
+	</p>
+	<p class="form-status" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+	import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../config';
+
+	const form = document.getElementById('contact-form') as HTMLFormElement;
+	const status = form.querySelector('.form-status') as HTMLParagraphElement;
+	const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+	const thanks = "Thanks! We've got your message and will be in touch soon.";
+
+	const setStatus = (message: string, kind: 'error' | 'success' | '') => {
+		status.textContent = message;
+		status.dataset.kind = kind;
+	};
+
+	form.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		const data = new FormData(form);
+		const value = (key: string) => String(data.get(key) ?? '').trim();
+
+		// Bots fill the hidden field; pretend it worked and drop it.
+		if (value('website')) {
+			form.reset();
+			setStatus(thanks, 'success');
+			return;
+		}
+
+		for (const name of ['name', 'email', 'message']) {
+			const input = form.elements.namedItem(name) as HTMLInputElement;
+			if (!value(name) || !input.checkValidity()) {
+				const label = form.querySelector(`label[for="${input.id}"]`)?.firstChild?.textContent?.trim();
+				setStatus(name === 'email' ? 'Please enter a valid email address.' : `Please fill in "${label}".`, 'error');
+				input.focus();
+				return;
+			}
+		}
+
+		button.disabled = true;
+		setStatus('Sending…', '');
+
+		try {
+			const response = await fetch(`${SUPABASE_URL}/rest/v1/contact_requests`, {
+				method: 'POST',
+				headers: {
+					apikey: SUPABASE_PUBLISHABLE_KEY,
+					'Content-Type': 'application/json',
+					Prefer: 'return=minimal',
+				},
+				body: JSON.stringify({
+					name: value('name'),
+					email: value('email'),
+					company: value('company') || null,
+					interest: value('interest') || null,
+					message: value('message'),
+					source: 'homepage',
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Contact request failed: ${response.status}`);
+			}
+
+			form.reset();
+			setStatus(thanks, 'success');
+		} catch (error) {
+			console.error(error);
+			setStatus('Something went wrong sending your message. Please try again in a moment.', 'error');
+		} finally {
+			button.disabled = false;
+		}
+	});
+</script>
